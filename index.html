@@ -1,0 +1,361 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Lunar HyTI: the Lunar Hyperspectral Thermal Imager</title>
+<meta name="description" content="The Lunar Hyperspectral Thermal Imager (Lunar HyTI) is a thermal infrared imaging spectrometer designed and built by the Hawaiʻi Space Flight Laboratory at the University of Hawaiʻi at Mānoa. It will fly on Intuitive Machines’ Altus-1 to map lunar water, silicate minerals, and meteoroid impact flashes.">
+<meta name="theme-color" content="#0a1230">
+<meta property="og:title" content="Lunar HyTI">
+<meta property="og:description" content="The Lunar Hyperspectral Thermal Imager, built by HSFL at the University of Hawaiʻi at Mānoa, will fly on Altus-1 to map lunar water and minerals.">
+<meta property="og:type" content="website">
+<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Crect width='32' height='32' rx='6' fill='%230a1230'/%3E%3Ccircle cx='16' cy='16' r='9' fill='%23d8d4c8'/%3E%3Cpath d='M16 7a9 9 0 0 1 0 18z' fill='%23ff7043'/%3E%3C/svg%3E">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wght@12..96,400;12..96,600;12..96,800&family=Source+Serif+4:ital,opsz,wght@0,8..60,400;0,8..60,600;1,8..60,400&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --night: #0a1230;
+    --deep: #111b45;
+    --regolith: #d8d4c8;
+    --dust: #9a98a8;
+    --ember: #ff7043;
+    --glow: #ffe082;
+    --orchid: #d81b60;
+    --indigo: #1b1464;
+    --line: rgba(216, 212, 200, 0.18);
+    --display: "Bricolage Grotesque", "Helvetica Neue", Arial, sans-serif;
+    --body: "Source Serif 4", Georgia, "Times New Roman", serif;
+    --measure: 66ch;
+    color-scheme: dark;
+  }
+  * { box-sizing: border-box; }
+  html { scroll-behavior: smooth; }
+  body {
+    margin: 0;
+    background: var(--night);
+    color: var(--regolith);
+    font-family: var(--body);
+    font-size: 1.125rem;
+    line-height: 1.65;
+    -webkit-font-smoothing: antialiased;
+  }
+  a { color: var(--glow); text-underline-offset: 0.2em; }
+  a:hover { color: #fff; }
+  :focus-visible { outline: 3px solid var(--glow); outline-offset: 3px; }
+  .wrap { width: min(1120px, 100% - 3rem); margin-inline: auto; }
+
+  /* top bar */
+  header.bar { padding: 1.25rem 0; border-bottom: 1px solid var(--line); }
+  header.bar .wrap { display: flex; justify-content: space-between; align-items: baseline; gap: 1rem; flex-wrap: wrap; }
+  .brand { font-family: var(--display); font-weight: 600; font-size: 1.05rem; text-decoration: none; color: var(--regolith); letter-spacing: 0.01em; }
+  nav ul { list-style: none; display: flex; gap: 1.5rem; margin: 0; padding: 0; flex-wrap: wrap; }
+  nav a { font-family: var(--display); font-size: 0.95rem; color: var(--dust); text-decoration: none; }
+  nav a:hover { color: var(--regolith); text-decoration: underline; }
+
+  /* hero */
+  .hero { padding: clamp(3rem, 8vw, 6.5rem) 0 2.5rem; }
+  .hero h1 {
+    font-family: var(--display);
+    font-weight: 800;
+    font-stretch: 75%;
+    font-size: clamp(3.6rem, 13vw, 10.5rem);
+    line-height: 0.9;
+    letter-spacing: -0.03em;
+    margin: 0 0 1.75rem;
+    background: linear-gradient(95deg, var(--regolith) 0%, var(--regolith) 38%, var(--glow) 62%, var(--ember) 82%, var(--orchid) 100%);
+    -webkit-background-clip: text; background-clip: text; color: transparent;
+  }
+  .hero p.lede { max-width: 38ch; font-size: clamp(1.25rem, 2.4vw, 1.6rem); line-height: 1.45; margin: 0; color: var(--regolith); }
+  .hero p.lede span { color: var(--dust); }
+
+  /* swath comparison */
+  .swath { position: relative; margin: 1rem 0 0; user-select: none; touch-action: pan-y; }
+  .swath .frame { position: relative; aspect-ratio: 30 / 13; width: 100%; overflow: hidden; background: #000; border-block: 1px solid var(--line); cursor: ew-resize; }
+  .swath .frame img { position: absolute; inset: 0; width: 100%; height: 100%; display: block; object-fit: cover; object-position: 50% 50%; pointer-events: none; }
+  #thermal { clip-path: inset(0 0 0 var(--split, 50%)); filter: url(#thermal-ramp); }
+  .divider { position: absolute; top: 0; bottom: 0; left: var(--split, 50%); width: 2px; background: var(--glow); box-shadow: 0 0 0 1px rgba(10,18,48,.55); pointer-events: none; }
+  .divider::after { content: ""; position: absolute; top: 50%; left: 50%; width: 34px; height: 34px; transform: translate(-50%, -50%); border-radius: 50%; background: var(--night); border: 2px solid var(--glow); }
+  .tag { position: absolute; top: 0.9rem; font-family: var(--display); font-size: 0.85rem; font-weight: 600; padding: 0.3rem 0.65rem; background: rgba(10,18,48,.78); color: var(--regolith); pointer-events: none; }
+  .tag.l { left: 0.9rem; } .tag.r { right: 0.9rem; }
+  .swath input[type=range] { position: absolute; inset: 0; width: 100%; height: 100%; opacity: 0; cursor: ew-resize; margin: 0; }
+  .swath:focus-within .divider::after { outline: 3px solid var(--glow); outline-offset: 3px; }
+  .swath figcaption { display: flex; justify-content: space-between; gap: 2rem; flex-wrap: wrap; padding: 0.9rem 0 0; font-family: var(--display); font-size: 0.9rem; color: var(--dust); }
+  .ramp { display: flex; align-items: center; gap: 0.7rem; }
+  .ramp i { display: block; width: 150px; height: 10px; background: linear-gradient(90deg, #1b1464, #6a1b9a, #d81b60, #ff7043, #ffe082); }
+
+  /* sections */
+  section { padding: clamp(3rem, 7vw, 5.5rem) 0; border-top: 1px solid var(--line); }
+  section.first { border-top: 0; }
+  h2 { font-family: var(--display); font-weight: 600; font-size: clamp(1.9rem, 4vw, 2.8rem); line-height: 1.1; letter-spacing: -0.015em; margin: 0 0 1.5rem; max-width: 22ch; }
+  .split { display: grid; grid-template-columns: minmax(0, 5fr) minmax(0, 7fr); gap: clamp(2rem, 6vw, 5rem); align-items: start; }
+  .split > h2 { margin: 0; position: sticky; top: 1.5rem; }
+  .prose p { max-width: var(--measure); margin: 0 0 1.2em; }
+  .prose p:last-child { margin-bottom: 0; }
+
+  dl.facts { margin: 0; display: grid; grid-template-columns: max-content 1fr; column-gap: 2.5rem; }
+  dl.facts dt, dl.facts dd { padding: 1rem 0; border-bottom: 1px solid var(--line); margin: 0; }
+  dl.facts dt { font-family: var(--display); font-size: 0.95rem; color: var(--dust); }
+  dl.facts dd { font-family: var(--display); font-size: 1.3rem; font-weight: 600; }
+  dl.facts dd small { display: block; font-family: var(--body); font-size: 0.95rem; font-weight: 400; color: var(--dust); margin-top: 0.15rem; }
+
+  ol.chain { list-style: none; margin: 0; padding: 0; counter-reset: s; max-width: var(--measure); }
+  ol.chain li { counter-increment: s; position: relative; padding: 0 0 1.5rem 3rem; }
+  ol.chain li::before { content: counter(s); position: absolute; left: 0; top: 0.05rem; width: 2rem; height: 2rem; border-radius: 50%; border: 1.5px solid var(--glow); color: var(--glow); font-family: var(--display); font-weight: 600; font-size: 0.95rem; display: grid; place-items: center; }
+  ol.chain li::after { content: ""; position: absolute; left: 1rem; top: 2.3rem; bottom: 0.3rem; width: 1px; background: var(--line); }
+  ol.chain li:last-child { padding-bottom: 0; } ol.chain li:last-child::after { display: none; }
+  ol.chain strong { font-family: var(--display); font-weight: 600; display: block; }
+
+  ul.partners { list-style: none; margin: 0; padding: 0; display: grid; gap: 1.5rem; max-width: var(--measure); }
+  ul.partners strong { font-family: var(--display); font-weight: 600; font-size: 1.15rem; display: block; }
+  ul.partners span { color: var(--dust); }
+
+  ul.logos { list-style: none; margin: 2.5rem 0 0; padding: 0; display: flex; flex-wrap: wrap; gap: 1rem; }
+  ul.logos li { background: #ffffff; border-radius: 6px; padding: 0.9rem 1.3rem; display: flex; align-items: center; min-height: 92px; }
+  ul.logos img { display: block; height: 64px; width: auto; max-width: 220px; object-fit: contain; }
+  ul.logos .fallback { color: #0a1230; font-family: var(--display); font-weight: 600; }
+  ul.refs { margin: 0.5rem 0 0; padding-left: 1.2rem; max-width: var(--measure); }
+  ul.refs li { margin-bottom: 0.4rem; }
+  .contact a.mail { font-family: var(--display); font-size: clamp(1.4rem, 3.2vw, 2.1rem); font-weight: 600; word-break: break-all; }
+
+  footer { border-top: 1px solid var(--line); padding: 2rem 0 3rem; color: var(--dust); font-family: var(--display); font-size: 0.9rem; }
+  footer .wrap { display: flex; justify-content: space-between; gap: 1rem; flex-wrap: wrap; }
+
+  @media (max-width: 800px) {
+    .split { grid-template-columns: 1fr; }
+    .split > h2 { position: static; }
+    .swath .frame { aspect-ratio: 16 / 10; }
+    dl.facts { grid-template-columns: 1fr; }
+    dl.facts dt { border-bottom: 0; padding-bottom: 0; }
+    dl.facts dd { padding-top: 0.2rem; }
+  }
+  @media (prefers-reduced-motion: reduce) { html { scroll-behavior: auto; } }
+</style>
+</head>
+<body>
+
+<header class="bar">
+  <div class="wrap">
+    <a class="brand" href="#top">Lunar HyTI</a>
+    <nav aria-label="Primary">
+      <ul>
+        <li><a href="#mission">Mission</a></li>
+        <li><a href="#science">Science</a></li>
+        <li><a href="#instrument">Instrument</a></li>
+        <li><a href="#heritage">HyTI heritage</a></li>
+        <li><a href="#team">Team</a></li>
+        <li><a href="#contact">Contact</a></li>
+      </ul>
+    </nav>
+  </div>
+</header>
+
+<main id="top">
+  <div class="wrap hero">
+    <h1>Lunar HyTI</h1>
+    <p class="lede">The Lunar Hyperspectral Thermal Imager sees in many colors of heat, from orbit around the Moon. <span>Designed and built by the Hawaiʻi Space Flight Laboratory at the University of Hawaiʻi at Mānoa.</span></p>
+  </div>
+
+  <!-- Maps image brightness onto the cooler-to-warmer color ramp for the illustrative thermal view. -->
+  <svg width="0" height="0" style="position:absolute" aria-hidden="true" focusable="false">
+    <filter id="thermal-ramp" color-interpolation-filters="sRGB">
+      <feColorMatrix type="matrix" values="0.2126 0.7152 0.0722 0 0  0.2126 0.7152 0.0722 0 0  0.2126 0.7152 0.0722 0 0  0 0 0 1 0"/>
+      <feComponentTransfer>
+        <feFuncR type="table" tableValues="0.106 0.217 0.327 0.448 0.607 0.767 0.880 0.947 1.000 1.000 1.000"/>
+        <feFuncG type="table" tableValues="0.078 0.088 0.098 0.106 0.106 0.106 0.178 0.323 0.479 0.679 0.878"/>
+        <feFuncB type="table" tableValues="0.392 0.468 0.543 0.587 0.503 0.419 0.352 0.302 0.285 0.398 0.510"/>
+      </feComponentTransfer>
+    </filter>
+  </svg>
+
+  <figure class="swath" aria-label="Lunar Reconnaissance Orbiter image of McGetchin Crater, compared with an illustrative false-color thermal view">
+    <div class="frame" id="frame">
+      <img id="visible" src="images/lro_McGetchin%20Crater.png" alt="" width="1100" height="1100">
+      <img id="thermal" src="images/lro_McGetchin%20Crater.png" alt="" width="1100" height="1100">
+      <span class="tag l">Visible light</span>
+      <span class="tag r">Thermal infrared</span>
+      <div class="divider" aria-hidden="true"></div>
+      <input type="range" id="slider" min="0" max="100" value="50" aria-label="Drag to compare the visible image of McGetchin Crater with an illustrative thermal view">
+    </div>
+    <figcaption>
+      <span>McGetchin Crater, imaged by NASA’s Lunar Reconnaissance Orbiter. Thermal view is an illustrative false-color rendering, not mission data.</span>
+      <span class="ramp"><span>Cooler</span><i aria-hidden="true"></i><span>Warmer</span></span>
+    </figcaption>
+  </figure>
+
+  <section id="mission" class="first">
+    <div class="wrap">
+      <div class="split">
+        <h2>The mission at a glance</h2>
+        <dl class="facts">
+          <dt>Instrument</dt>
+          <dd>Lunar Hyperspectral Thermal Imager<small>Thermal infrared, 4.5–11.4 µm</small></dd>
+          <dt>Principal investigator</dt>
+          <dd>Dr. Paul Lucey<small>Developer of the instrument’s interferometer</small></dd>
+          <dt>Designed and built by</dt>
+          <dd>Hawaiʻi Space Flight Laboratory<small>University of Hawaiʻi at Mānoa</small></dd>
+          <dt>Spacecraft</dt>
+          <dd>Altus-1<small>Developed by Intuitive Machines. The first satellite in its lunar communications and navigation constellation.</small></dd>
+          <dt>Orbit</dt>
+          <dd>Highly elliptical, about 2,000 × 20,000 km</dd>
+          <dt>Looking for</dt>
+          <dd>Molecular water, silicate minerals, and meteoroid impact flashes</dd>
+        </dl>
+      </div>
+    </div>
+  </section>
+
+  <section id="science">
+    <div class="wrap">
+      <div class="split">
+        <h2>Why look at the Moon in thermal infrared</h2>
+        <div class="prose">
+          <p>The Moon has almost no atmosphere to move heat around, so its surface temperature and the light it emits are set by the ground itself. That emitted infrared carries information about what the surface is made of, and a hyperspectral imager splits it into many narrow bands so a single pixel can show both temperature and composition.</p>
+          <p>Lunar HyTI covers 4.5 to 11.4 µm and is designed around three science goals:</p>
+          <ol class="chain" style="margin-top:1.5rem">
+            <li><strong>Map molecular water</strong>Water has a spectral signature near 6 µm, which falls inside the instrument’s range.</li>
+            <li><strong>Map silicate minerals</strong>Silicate mineralogy shows up in the thermal infrared, including on the lunar farside.</li>
+            <li><strong>Catch impact flashes</strong>Small meteoroids striking the surface produce brief infrared flashes that the imager can detect.</li>
+          </ol>
+          <p style="margin-top:1.5rem">Full specifications and science goals are on the <a href="https://www.higp.hawaii.edu/lunar_hyti/">HIGP Lunar HyTI page</a>.</p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <section id="instrument">
+    <div class="wrap">
+      <div class="split">
+        <h2>An imaging spectrometer built for the Moon</h2>
+        <div class="prose">
+          <p>The Lunar Hyperspectral Thermal Imager, or Lunar HyTI, was designed and built by the Hawaiʻi Space Flight Laboratory. At its core is an interferometer developed by Dr. Paul Lucey, the mission’s principal investigator.</p>
+          <p>It is a close derivative of the Hyperspectral Thermal Imager flown on <a href="#heritage">NASA’s HyTI mission</a>, a 6U CubeSat that imaged Earth in thermal infrared. Lunar HyTI keeps that heritage and extends the spectral range to 4.5–11.4 µm. Intuitive Machines is developing Altus-1, the spacecraft the instrument will be installed on.</p>
+          <ol class="chain" style="margin-top:2rem">
+            <li><strong>Collect</strong>Optics gather thermal infrared light from the lunar surface.</li>
+            <li><strong>Separate</strong>The interferometer divides that light into narrow spectral bands.</li>
+            <li><strong>Image</strong>Each image records a spectrum at every pixel of the scene.</li>
+            <li><strong>Downlink</strong>Data returns to Earth for calibration and science analysis.</li>
+          </ol>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <section id="heritage">
+    <div class="wrap">
+      <div class="split">
+        <h2>Heritage: NASA’s HyTI CubeSat</h2>
+        <div>
+          <div class="prose">
+            <p>HyTI, the Hyperspectral Thermal Imager, was a 6U CubeSat technology demonstration funded by NASA’s Earth Science Technology Office through its InVEST program. It showed that high spatial and spectral resolution thermal infrared imaging is possible from a very small satellite. Lunar HyTI builds directly on that work.</p>
+          </div>
+          <dl class="facts" style="margin-top:2rem">
+            <dt>Platform</dt>
+            <dd>6U CubeSat<small>Operated by the Hawaiʻi Space Flight Laboratory</small></dd>
+            <dt>Imaging</dt>
+            <dd>25 spectral bands from 8.0 to 10.7 µm<small>60 m ground resolution from a 430 km orbit</small></dd>
+            <dt>Technology</dt>
+            <dd>No-moving-parts interferometer<small>With a JPL barrier infrared detector array and onboard processing on CPU, GPU, and FPGA</small></dd>
+            <dt>Flight</dt>
+            <dd>Launched March 21, 2024<small>To the ISS on a SpaceX resupply mission. Deployed in April 2024 and deorbited on December 17, 2024.</small></dd>
+            <dt>Earth science</dt>
+            <dd>Volcanoes, wildfires, and soil moisture</dd>
+          </dl>
+          <div class="prose" style="margin-top:2rem">
+            <p>Read more about HyTI:</p>
+            <ul class="refs">
+              <li><a href="https://esto.nasa.gov/invest/hyti/">NASA ESTO InVEST: HyTI Hyperspectral Thermal Imager</a></li>
+              <li><a href="https://www.hsfl.hawaii.edu/missions/hyti/">HSFL: HyTI mission page and outcome</a></li>
+              <li><a href="https://hawaii.edu/news/2024/03/25/satellite-launch-success-hyti">University of Hawaiʻi News: HyTI launch</a></li>
+            </ul>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <section id="team">
+    <div class="wrap">
+      <div class="split">
+        <h2>Who is building it</h2>
+        <div>
+          <ul class="partners">
+            <li><strong>Dr. Paul Lucey, principal investigator</strong><span>Developed the interferometer at the heart of the instrument.</span></li>
+            <li><strong>Hawaiʻi Space Flight Laboratory (HSFL)</strong><span>Designed and built the instrument at the University of Hawaiʻi at Mānoa.</span></li>
+            <li><strong>Intuitive Machines</strong><span>Developing Altus-1, the first satellite in its lunar communications and navigation constellation, which will carry the instrument.</span></li>
+            <!-- TODO: add named team members, HIGP science team, and funding agency. -->
+          </ul>
+          <ul class="logos" aria-label="Partner logos">
+            <li><img src="images/uh-manoa.png" alt="University of Hawaiʻi at Mānoa" height="64"></li>
+            <li><img src="images/hsfl.jpeg" alt="Hawaiʻi Space Flight Laboratory" height="64"></li>
+            <li><img src="images/higp.jpeg" alt="Hawaiʻi Institute of Geophysics and Planetology" height="64"></li>
+            <li><img src="images/intuitive-machines.png" alt="Intuitive Machines" height="64"></li>
+          </ul>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <section id="contact" class="contact">
+    <div class="wrap">
+      <div class="split">
+        <h2>Get in touch</h2>
+        <div class="prose">
+          <p>For collaboration, student opportunities, or press questions, write to the Hawaiʻi Space Flight Laboratory.</p>
+          <p><a class="mail" href="mailto:info@hsfl.hawaii.edu">info@hsfl.hawaii.edu</a></p>
+          <p>Learn more about HSFL and its projects on <a href="https://github.com/hsfl">GitHub</a>.</p>
+        </div>
+      </div>
+    </div>
+  </section>
+</main>
+
+<footer>
+  <div class="wrap">
+    <span>Lunar HyTI · University of Hawaiʻi at Mānoa</span>
+    <span>McGetchin Crater image: NASA/GSFC/Arizona State University (LROC).</span>
+  </div>
+</footer>
+
+<script>
+(function () {
+  "use strict";
+
+  // Comparison slider
+  var slider = document.getElementById("slider");
+  var frame = document.getElementById("frame");
+  function setSplit(v) { frame.style.setProperty("--split", v + "%"); }
+  slider.addEventListener("input", function () { setSplit(slider.value); });
+
+  // One intro sweep, skipped for reduced motion
+  var reduce = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
+  if (reduce) { setSplit(50); }
+  else {
+    var start = null, from = 96, to = 50, dur = 1600, touched = false;
+    slider.addEventListener("pointerdown", function () { touched = true; });
+    slider.addEventListener("keydown", function () { touched = true; });
+    setSplit(from);
+    requestAnimationFrame(function step(ts) {
+      if (touched) return;
+      if (start === null) start = ts;
+      var p = Math.min(1, (ts - start) / dur), e = 1 - Math.pow(1 - p, 3);
+      var v = from + (to - from) * e;
+      slider.value = v; setSplit(v);
+      if (p < 1) requestAnimationFrame(step);
+    });
+  }
+})();
+
+// If a logo file is missing, show the organization name instead of a broken image.
+document.querySelectorAll("ul.logos img").forEach(function (img) {
+  function swap() {
+    var t = document.createElement("span");
+    t.className = "fallback"; t.textContent = img.alt;
+    img.replaceWith(t);
+  }
+  img.addEventListener("error", swap);
+  if (img.complete && img.naturalWidth === 0) swap();
+});
+</script>
+</body>
+</html>
