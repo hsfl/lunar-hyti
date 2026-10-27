@@ -91,6 +91,11 @@
   h2 { font-family: var(--display); font-weight: 600; font-size: clamp(1.9rem, 4vw, 2.8rem); line-height: 1.1; letter-spacing: -0.015em; margin: 0 0 1.5rem; max-width: 22ch; }
   .split { display: grid; grid-template-columns: minmax(0, 5fr) minmax(0, 7fr); gap: clamp(2rem, 6vw, 5rem); align-items: start; }
   .split > h2 { margin: 0; position: sticky; top: 1.5rem; }
+  .split > .head { position: sticky; top: 1.5rem; }
+  .split > .head h2 { margin: 0; }
+  .heritage-media { display: flex; align-items: flex-start; gap: 1rem; margin-top: 2rem; }
+  .heritage-media ul.logos { margin: 0; flex: none; }
+  .heritage-media img.cubesat { display: block; width: min(240px, 100%); height: auto; border-radius: 6px; min-width: 0; }
   .prose p { max-width: var(--measure); margin: 0 0 1.2em; }
   .prose p:last-child { margin-bottom: 0; }
 
@@ -128,7 +133,7 @@
     .hero { grid-template-columns: 1fr; }
     .hero h1 { font-size: clamp(3.6rem, 16vw, 7rem); }
     .hero img.instrument { max-width: 220px; }
-    .split > h2 { position: static; }
+    .split > h2, .split > .head { position: static; }
     .swath .frame { aspect-ratio: 16 / 10; }
     dl.facts { grid-template-columns: 1fr; }
     dl.facts dt { border-bottom: 0; padding-bottom: 0; }
@@ -252,7 +257,15 @@
   <section id="heritage">
     <div class="wrap">
       <div class="split">
-        <h2>Heritage: NASA’s HyTI CubeSat</h2>
+        <div class="head">
+          <h2>Heritage: NASA’s HyTI CubeSat</h2>
+          <div class="heritage-media">
+            <ul class="logos" aria-label="HyTI sponsor">
+              <li><a href="https://esto.nasa.gov/"><img src="images/nasa.svg" alt="NASA" height="64"></a></li>
+            </ul>
+            <img class="cubesat" src="images/hyti-cubesat-web.jpg" alt="The HyTI CubeSat in a clean room with members of the HSFL team" width="600" height="800" loading="lazy">
+          </div>
+        </div>
         <div>
           <div class="prose">
             <p>HyTI, the Hyperspectral Thermal Imager, was a 6U CubeSat technology demonstration funded by NASA’s Earth Science Technology Office through its InVEST program. It showed that high spatial and spectral resolution thermal infrared imaging is possible from a very small satellite. Lunar HyTI builds directly on that work.</p>
