@@ -54,12 +54,13 @@
   nav a:hover { color: var(--regolith); text-decoration: underline; }
 
   /* hero */
-  .hero { padding: clamp(3rem, 8vw, 6.5rem) 0 2.5rem; }
+  .hero { padding: clamp(3rem, 8vw, 6.5rem) 0 2.5rem; display: grid; grid-template-columns: minmax(0, 1fr) minmax(0, 340px); gap: clamp(2rem, 5vw, 4rem); align-items: center; }
+  .hero img.instrument { display: block; width: 100%; height: auto; border-radius: 6px; }
   .hero h1 {
     font-family: var(--display);
     font-weight: 800;
     font-stretch: 75%;
-    font-size: clamp(3.6rem, 13vw, 10.5rem);
+    font-size: clamp(3.6rem, 10vw, 8rem);
     line-height: 0.9;
     letter-spacing: -0.03em;
     margin: 0 0 1.75rem;
@@ -111,7 +112,8 @@
   ul.partners span { color: var(--dust); }
 
   ul.logos { list-style: none; margin: 2.5rem 0 0; padding: 0; display: flex; flex-wrap: wrap; gap: 1rem; }
-  ul.logos li { background: #ffffff; border-radius: 6px; padding: 0.9rem 1.3rem; display: flex; align-items: center; min-height: 92px; }
+  ul.logos a { background: #ffffff; border-radius: 6px; padding: 0.9rem 1.3rem; display: flex; align-items: center; min-height: 92px; text-decoration: none; transition: box-shadow 0.15s; }
+  ul.logos a:hover { box-shadow: 0 0 0 3px var(--glow); }
   ul.logos img { display: block; height: 64px; width: auto; max-width: 220px; object-fit: contain; }
   ul.logos .fallback { color: #0a1230; font-family: var(--display); font-weight: 600; }
   ul.refs { margin: 0.5rem 0 0; padding-left: 1.2rem; max-width: var(--measure); }
@@ -123,6 +125,9 @@
 
   @media (max-width: 800px) {
     .split { grid-template-columns: 1fr; }
+    .hero { grid-template-columns: 1fr; }
+    .hero h1 { font-size: clamp(3.6rem, 16vw, 7rem); }
+    .hero img.instrument { max-width: 220px; }
     .split > h2 { position: static; }
     .swath .frame { aspect-ratio: 16 / 10; }
     dl.facts { grid-template-columns: 1fr; }
@@ -152,8 +157,11 @@
 
 <main id="top">
   <div class="wrap hero">
-    <h1>Lunar HyTI</h1>
-    <p class="lede">The Lunar Hyperspectral Thermal Imager sees in many colors of heat, from orbit around the Moon. <span>Designed and built by the Hawaiʻi Space Flight Laboratory at the University of Hawaiʻi at Mānoa.</span></p>
+    <div>
+      <h1>Lunar HyTI</h1>
+      <p class="lede">The Lunar Hyperspectral Thermal Imager sees in many colors of heat, from orbit around the Moon. <span>Designed and built by the Hawaiʻi Space Flight Laboratory at the University of Hawaiʻi at Mānoa.</span></p>
+    </div>
+    <img class="instrument" src="images/lunar-hyti-web.jpg" alt="The Lunar HyTI instrument on a bench mount" width="900" height="1200">
   </div>
 
   <!-- Maps image brightness onto the cooler-to-warmer color ramp for the illustrative thermal view. -->
@@ -286,10 +294,10 @@
             <!-- TODO: add named team members, HIGP science team, and funding agency. -->
           </ul>
           <ul class="logos" aria-label="Partner logos">
-            <li><img src="images/uh-manoa.png" alt="University of Hawaiʻi at Mānoa" height="64"></li>
-            <li><img src="images/hsfl.jpeg" alt="Hawaiʻi Space Flight Laboratory" height="64"></li>
-            <li><img src="images/higp.jpeg" alt="Hawaiʻi Institute of Geophysics and Planetology" height="64"></li>
-            <li><img src="images/intuitive-machines.png" alt="Intuitive Machines" height="64"></li>
+            <li><a href="https://manoa.hawaii.edu/"><img src="images/uh-manoa.png" alt="University of Hawaiʻi at Mānoa" height="64"></a></li>
+            <li><a href="https://www.hsfl.hawaii.edu/"><img src="images/hsfl.jpeg" alt="Hawaiʻi Space Flight Laboratory" height="64"></a></li>
+            <li><a href="https://www.higp.hawaii.edu/"><img src="images/higp.jpeg" alt="Hawaiʻi Institute of Geophysics and Planetology" height="64"></a></li>
+            <li><a href="https://www.intuitivemachines.com/"><img src="images/intuitive-machines.png" alt="Intuitive Machines" height="64"></a></li>
           </ul>
         </div>
       </div>
